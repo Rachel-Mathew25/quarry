@@ -1,57 +1,51 @@
-# Quarry
+# ⛏ Quarry
 
-Most students apply to internships blind. They don't know if a founder 
-is worth reaching out to, whether their skills are a fit, or what to 
-even say. Quarry fixes that.
+Quarry is an autonomous founder intelligence agent that helps students find the right founders to cold email — and actually get responses.
 
-Drop in your resume. Tell Quarry a domain you care about. Get back a 
-founder intelligence report — what they're building, what signals they're 
-putting out publicly, where the gap is between you and what they need, 
-and a cold email that closes that gap.
+Most cold emails fail because students email the wrong founder, at the wrong time, about the wrong thing. Quarry fixes the root cause.
 
-Not a job board. Not a template generator. A system that tells you 
-who to reach, why right now, and how to become what they need.
+## What it does
 
-## The problem
+- Finds founders across GitHub, Twitter, LinkedIn, and the web — no username needed
+- Analyzes their stack, recent activity, and what they're actively struggling with
+- Compares their needs against your skills and identifies the exact gap
+- Recommends a specific project to build that closes that gap
+- Writes a brutally precise cold email that references something real
+- Sends it automatically — zero effort from the student
 
-Searching "founder" on LinkedIn does nothing. Cold emailing without 
-knowing what someone needs doesn't work. Most internship opportunities 
-at early-stage startups are never posted anywhere — they exist only if 
-you reach the right person at the right moment with the right thing to say.
+## Architecture
 
-## What Quarry does
+agents/        # ReAct agent loop — orchestrates everything
+tools/         # GitHub, Twitter, LinkedIn, web, email
+rag/           # semantic chunking, embeddings, hybrid retrieval, memory
+core/          # founder + student profiles, evaluation
+data/chroma/   # vector database
 
-1. Parses your resume — skills, projects, domains, gaps
-2. Finds founders building in spaces relevant to you
-3. Builds a founder intelligence profile — GitHub activity, public 
-   signals, what they're excited about, what they're missing
-4. Runs a skill gap analysis — where you fit, where you don't
-5. Tells you what to build or learn to become a stronger fit
-6. Drafts a cold email timed to something they actually care about right now
+## Tech stack
+
+- LLM: Groq (LLaMA 3.3 70B)
+- Embeddings: BAAI/bge-large-en-v1.5 via HuggingFace
+- Vector DB: ChromaDB + FAISS
+- Retrieval: Hybrid dense + sparse with cross-encoder reranking
+- Web search: Tavily
+- Scraping: BeautifulSoup
+- Email: SMTP + Gmail API
+
+## Setup
+
+```bash
+git clone https://github.com/Rachel-Mathew25/quarry
+cd quarry
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+# Add your API keys to .env
+python main.py
+```
 
 ## Status
 
-V1 (live): resume → founder search → cold email draft
-V2 (in progress): GitHub intelligence layer — what founders are 
-actually building vs. what they say they're building
-V3 (planned): Twitter signal tracking, skill gap analysis, 
-"what to build next" recommender
+🚧 Active development — Phase 1
 
-## Stack
-
-- Python
-- Groq (LLaMA 3) — inference
-- Tavily — web search
-- GitHub API — founder activity signals
-- pdfplumber — resume parsing
-
-## Run it
-
-pip install -r requirements.txt
-python main.py resume.pdf
-
-## Why I built this
-
-I'm a CS student at PES University who spent hours trying to find 
-founders to reach out to and had no idea if I was a fit for any of 
-them. Quarry is the tool I needed and couldn't find.
+Built by Rachel Mathew | Building in public: #buildinpublic
